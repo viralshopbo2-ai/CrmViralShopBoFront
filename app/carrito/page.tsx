@@ -1,15 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { Navigation } from '@/components/navigation';
 import { CartProvider, useCart } from '@/lib/cart-context';
 import { useToast } from '@/lib/toast-context';
 import { CONTACT_INFO } from '@/lib/config';
+import { OrderFormDialog } from '@/components/order-form-dialog';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ArrowLeft, MessageCircle } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowLeft, MessageCircle, ClipboardList } from 'lucide-react';
 
 function CarritoContent() {
   const { items, removeFromCart, updateQuantity, total } = useCart();
   const { error } = useToast();
+  const [orderFormOpen, setOrderFormOpen] = useState(false);
 
   const shippingCost = items.length > 0 ? 9.99 : 0;
   const subtotal = total;
@@ -185,12 +188,22 @@ function CarritoContent() {
                   Comprar por WhatsApp
                 </button>
 
+                <button
+                  onClick={() => setOrderFormOpen(true)}
+                  className="w-full glass-button bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white hover:shadow-lg inline-flex items-center justify-center gap-2 font-semibold"
+                >
+                  <ClipboardList size={20} />
+                  Comprar por Formulario
+                </button>
+
                 <Link
                   href="/"
                   className="w-full glass-button text-white hover:bg-white/10 text-center"
                 >
                   Continuar Comprando
                 </Link>
+
+                <OrderFormDialog open={orderFormOpen} onOpenChange={setOrderFormOpen} />
 
                 {/* Shipping Info */}
                 <div className="glass-card-sm p-4 space-y-2 border border-cyan-400/30">
