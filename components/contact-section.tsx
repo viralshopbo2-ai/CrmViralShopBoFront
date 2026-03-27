@@ -1,17 +1,10 @@
 'use client';
 
-import { MessageCircle, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { ShoppingBag, Phone, Mail, Clock, Gift, Banknote } from 'lucide-react';
 import { CONTACT_INFO } from '@/lib/config';
 import Link from 'next/link';
 
 export function ContactSection() {
-  const handleWhatsAppClick = () => {
-    if (CONTACT_INFO.whatsappNumber) {
-      const url = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=Hola! Me interesa en tus productos`;
-      window.open(url, '_blank');
-    }
-  };
-
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -21,32 +14,27 @@ export function ContactSection() {
             ¿Tienes dudas? Contacta con nosotros
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Estamos disponibles por WhatsApp, teléfono y email para ayudarte con cualquier pregunta
+            Estamos disponibles por teléfono y email para ayudarte con cualquier pregunta
           </p>
         </div>
 
         {/* Contact Methods Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* WhatsApp */}
-          <div className="glass-card p-8 rounded-2xl space-y-4 text-center hover:border-emerald-400 transition-colors">
+          {/* Compra Fácil */}
+          <div className="glass-card p-8 rounded-2xl space-y-4 text-center hover:border-cyan-400 transition-colors">
             <div className="flex justify-center">
-              <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 p-4 rounded-full">
-                <MessageCircle className="text-emerald-400" size={32} />
+              <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 p-4 rounded-full">
+                <ShoppingBag className="text-cyan-400" size={32} />
               </div>
             </div>
-            <h3 className="text-xl font-semibold text-white">WhatsApp</h3>
-            <p className="text-white/60 text-sm">Soporte instantáneo y atención rápida</p>
-            {CONTACT_INFO.whatsappNumber && (
-              <button
-                onClick={handleWhatsAppClick}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all text-sm"
-              >
-                Escribir por WhatsApp
-              </button>
-            )}
-            {!CONTACT_INFO.whatsappNumber && (
-              <p className="text-yellow-400 text-xs">Configura el número en las variables de entorno</p>
-            )}
+            <h3 className="text-xl font-semibold text-white">Compra Fácil</h3>
+            <p className="text-white/60 text-sm">Completa tu pedido en minutos</p>
+            <Link
+              href="/"
+              className="block w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all text-sm"
+            >
+              Ver Productos
+            </Link>
           </div>
 
           {/* Phone */}
@@ -98,15 +86,28 @@ export function ContactSection() {
           </div>
         </div>
 
-        {/* Info Box */}
-        <div className="glass-dark rounded-2xl p-8 text-center max-w-2xl mx-auto space-y-4">
-          <p className="text-white text-lg">
-            <span className="font-semibold text-cyan-400">Recomendamos usar WhatsApp</span> para consultas y
-            pedidos rápidos
-          </p>
-          <p className="text-white/60">
-            Nuestro equipo responde en menos de una hora durante el horario de atención
-          </p>
+        {/* Info Box - Beneficios */}
+        <div className="glass-dark rounded-2xl p-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-emerald-400/20 flex items-center justify-center flex-shrink-0">
+                <Gift className="text-emerald-400" size={28} />
+              </div>
+              <div>
+                <p className="font-bold text-emerald-400">ENVIO GRATIS</p>
+                <p className="text-white/60 text-sm">A todo el país sin costo adicional</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
+                <Banknote className="text-amber-400" size={28} />
+              </div>
+              <div>
+                <p className="font-bold text-amber-400">PAGO CONTRAENTREGA</p>
+                <p className="text-white/60 text-sm">Pagas cuando recibas tu pedido</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

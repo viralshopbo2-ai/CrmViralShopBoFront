@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/lib/types';
 import { useCart } from '@/lib/cart-context';
 import { useToast } from '@/lib/toast-context';
-import { MessageCircle, Star, Heart } from 'lucide-react';
-import { CONTACT_INFO } from '@/lib/config';
+import { ShoppingCart, Star, Heart } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -16,8 +14,8 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
   const { addToCart } = useCart();
-  const { success, error } = useToast();
-  const [quantity, setQuantity] = useState(1);
+  const { success } = useToast();
+  const [quantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showAddedNotif, setShowAddedNotif] = useState(false);
 
@@ -26,19 +24,6 @@ export function ProductCard({ product }: ProductCardProps) {
     success(`${product.name} agregado al carrito`);
     setShowAddedNotif(true);
     setTimeout(() => setShowAddedNotif(false), 2000);
-  };
-
-  const handleWhatsApp = () => {
-    const message = `Hola! Me interesa en este producto:\n\n${product.name}\nPrecio: Bs. ${product.price.toFixed(2)}\n\n¿Está disponible?`;
-    const phone = CONTACT_INFO.whatsappNumber;
-    
-    if (!phone) {
-      error('Por favor, configura tu número de WhatsApp en las variables de entorno');
-      return;
-    }
-    
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
   };
 
   const handleNavigateToProduct = () => {
@@ -148,7 +133,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   : 'bg-white/5 text-white/50 cursor-not-allowed'
               }`}
             >
-              <MessageCircle  size={16} />
+              <ShoppingCart size={16} />
               {inStock ? 'Agregar al carrito' : 'Agotado'}
             </button>
 

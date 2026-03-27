@@ -3,47 +3,16 @@
 import { useState } from 'react';
 import { Navigation } from '@/components/navigation';
 import { CartProvider, useCart } from '@/lib/cart-context';
-import { useToast } from '@/lib/toast-context';
-import { CONTACT_INFO } from '@/lib/config';
 import { OrderFormDialog } from '@/components/order-form-dialog';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, ArrowLeft, MessageCircle, ClipboardList } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag, Gift, Banknote } from 'lucide-react';
 
 function CarritoContent() {
   const { items, removeFromCart, updateQuantity, total } = useCart();
-  const { error } = useToast();
   const [orderFormOpen, setOrderFormOpen] = useState(false);
 
-  const shippingCost = items.length > 0 ? 9.99 : 0;
   const subtotal = total;
-  const finalTotal = subtotal ;
-
-  const handleCheckoutWhatsApp = () => {
-    if (!CONTACT_INFO.whatsappNumber) {
-      error('Por favor, configura tu número de WhatsApp en las variables de entorno');
-      return;
-    }
-
-    // Construir mensaje con los productos del carrito
-    let messageText = 'Hola! Quisiera hacer la siguiente compra:\n\n';
-    messageText += '📦 *PRODUCTOS*:\n';
-    
-    items.forEach((item) => {
-      messageText += `\n• ${item.product.name}\n`;
-      messageText += `  Cantidad: ${item.quantity}\n`;
-      messageText += `  Precio unitario: Bs. ${item.product.price.toFixed(2)}\n`;
-      messageText += `  Subtotal: Bs. ${(item.product.price * item.quantity).toFixed(2)}`;
-    });
-
-    messageText += `\n\n💰 *RESUMEN DE PAGO*:\n`;
-    messageText += `Subtotal: Bs. ${subtotal.toFixed(2)}\n`;
-    messageText += `Envío: Bs. ${shippingCost.toFixed(2)}\n`;
-    messageText += `*TOTAL: Bs. ${finalTotal.toFixed(2)}*\n\n`;
-    messageText += '¿Podemos proceder con la compra?';
-
-    const whatsappURL = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(messageText)}`;
-    window.open(whatsappURL, '_blank');
-  };
+  const finalTotal = subtotal;
 
   if (items.length === 0) {
     return (
@@ -180,20 +149,13 @@ function CarritoContent() {
                   </div>
                 </div>
 
-                <button
-                  onClick={handleCheckoutWhatsApp}
-                  className="w-full glass-button bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white hover:shadow-lg inline-flex items-center justify-center gap-2 font-semibold"
-                >
-                  <MessageCircle size={20} />
-                  Comprar por WhatsApp
-                </button>
-
+                {/* Botón principal - Comprar por Formulario (animado) */}
                 <button
                   onClick={() => setOrderFormOpen(true)}
-                  className="w-full glass-button bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white hover:shadow-lg inline-flex items-center justify-center gap-2 font-semibold"
+                  className="w-full cta-buy-button text-white py-4 text-lg font-bold inline-flex items-center justify-center gap-3 rounded-2xl transition-all"
                 >
-                  <ClipboardList size={20} />
-                  Comprar por Formulario
+                  <ShoppingBag size={24} />
+                  Comprar Ahora
                 </button>
 
                 <Link
@@ -206,9 +168,19 @@ function CarritoContent() {
                 <OrderFormDialog open={orderFormOpen} onOpenChange={setOrderFormOpen} />
 
                 {/* Shipping Info */}
-                <div className="glass-card-sm p-4 space-y-2 border border-cyan-400/30">
-                  <p className="text-sm font-semibold text-cyan-400">📦 Envío Gratis</p>
-                  
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="glass-card-sm p-3 flex items-center gap-2 border border-emerald-400/30 bg-emerald-400/5">
+                    <Gift className="text-emerald-400 flex-shrink-0" size={18} />
+                    <div>
+                      <p className="text-xs font-bold text-emerald-400">ENVIO GRATIS</p>
+                    </div>
+                  </div>
+                  <div className="glass-card-sm p-3 flex items-center gap-2 border border-amber-400/30 bg-amber-400/5">
+                    <Banknote className="text-amber-400 flex-shrink-0" size={18} />
+                    <div>
+                      <p className="text-xs font-bold text-amber-400">CONTRAENTREGA</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

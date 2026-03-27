@@ -5,11 +5,12 @@ import { CartProvider, useCart } from '@/lib/cart-context';
 import { useToast } from '@/lib/toast-context';
 import { products, getProductById, getProductsByCategory } from '@/lib/products';
 import { ProductCard } from '@/components/product-card';
-import { WhatsAppButton } from '@/components/whatsapp-button';
+import { BuyNowButton } from '@/components/buy-now-button';
+import { DiscountCards } from '@/components/discount-cards';
 import { ProductImageGallery } from '@/components/product-image-gallery';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Star, ShoppingCart, ArrowLeft, Truck, Shield, RefreshCw, MessageCircle, Check } from 'lucide-react';
+import { Star, ShoppingCart, ArrowLeft, Truck, Shield, RefreshCw, Check, Gift, Banknote } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -49,7 +50,17 @@ function ProductContent() {
     success(`${product.name} - Cantidad: ${quantity} fue agregado al carrito!`);
   };
 
-  const whatsappMessage = `Hola! Me interesa comprar: ${product.name} - Cantidad: ${quantity} - Precio: Bs. ${(product.price * quantity).toFixed(2)}`;
+  // Calcular descuento según cantidad
+  const getDiscountPercent = (qty: number) => {
+    if (qty >= 3) return 20;
+    if (qty >= 2) return 15;
+    return 0;
+  };
+
+  const discountPercent = getDiscountPercent(quantity);
+  const originalTotal = product.price * quantity;
+  const discountAmount = originalTotal * (discountPercent / 100);
+  const finalTotal = originalTotal - discountAmount;
 
   const stars = Array(5).fill(0);
 
@@ -74,7 +85,7 @@ function ProductContent() {
             />
 
             {/* Info */}
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Header */}
               <div>
                 <div className="flex items-start justify-between mb-4">
@@ -102,6 +113,28 @@ function ProductContent() {
                 </div>
               </div>
 
+              {/* Entrega Gratis y Pago Contraentrega */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="glass-card p-4 rounded-2xl flex items-center gap-3 border-emerald-400/30 bg-emerald-400/5">
+                  <div className="w-12 h-12 rounded-full bg-emerald-400/20 flex items-center justify-center">
+                    <Gift className="text-emerald-400" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-emerald-400 font-bold text-sm">ENTREGA GRATIS</p>
+                    <p className="text-white/60 text-xs">A todo el país</p>
+                  </div>
+                </div>
+                <div className="glass-card p-4 rounded-2xl flex items-center gap-3 border-amber-400/30 bg-amber-400/5">
+                  <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center">
+                    <Banknote className="text-amber-400" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-amber-400 font-bold text-sm">PAGO CONTRAENTREGA</p>
+                    <p className="text-white/60 text-xs">Pagas cuando recibas</p>
+                  </div>
+                </div>
+              </div>
+
               {/* Price */}
               <div className="glass-card p-6 rounded-2xl">
                 <p className="text-white/60 text-sm mb-2">Precio</p>
@@ -118,6 +151,13 @@ function ProductContent() {
                 <h2 className="text-2xl font-bold text-white">Descripción</h2>
                 <p className="text-white/70 text-lg leading-relaxed">{product.description}</p>
               </div>
+
+              {/* Discount Cards */}
+              <DiscountCards 
+                price={product.price} 
+                selectedQuantity={quantity}
+                onSelectQuantity={setQuantity}
+              />
 
               {/* Stock Status */}
               <div className="glass-card p-4 rounded-xl">
@@ -144,14 +184,29 @@ function ProductContent() {
                   >
                     +
                   </button>
-                  <p className="text-white/60 text-sm ml-auto">
-                    Total: <span className="text-cyan-400 font-semibold">Bs. {(product.price * quantity).toFixed(2)}</span>
-                  </p>
+                  <div className="ml-auto text-right">
+                    {discountPercent > 0 && (
+                      <p className="text-white/40 text-sm line-through">
+                        Bs. {originalTotal.toFixed(2)}
+                      </p>
+                    )}
+                    <p className="text-cyan-400 font-semibold">
+                      Total: <span className="text-lg">Bs. {finalTotal.toFixed(2)}</span>
+                      {discountPercent > 0 && (
+                        <span className="ml-2 text-emerald-400 text-sm">(-{discountPercent}%)</span>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-4">
+                {/* Botón principal - Comprarlo Ahora (animado y llamativo) */}
+                {product.stock > 0 && (
+                  <BuyNowButton product={product} quantity={quantity} />
+                )}
+
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
@@ -163,10 +218,6 @@ function ProductContent() {
                   <ShoppingCart size={24} />
                   {product.stock > 0 ? `Agregar al Carrito (${quantity})` : 'Agotado'}
                 </button>
-
-                {product.stock > 0 && (
-                  <WhatsAppButton message={whatsappMessage} />
-                )}
 
                 <Link
                   href="/carrito"
@@ -180,7 +231,7 @@ function ProductContent() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="glass-card-sm p-4 rounded-xl space-y-2">
                   <Truck className="text-cyan-400" size={24} />
-                  <p className="text-sm text-white font-semibold">Envío Rápido</p>
+                  <p className="text-sm text-white font-semibold">Envío Gratis</p>
                   <p className="text-xs text-white/60">A domicilio en 1-3 días</p>
                 </div>
                 <div className="glass-card-sm p-4 rounded-xl space-y-2">
@@ -258,7 +309,7 @@ function ProductContent() {
                 },
                 {
                   name: 'María García',
-                  text: 'El servicio de atención por WhatsApp fue muy rápido y eficiente. Recomendado!',
+                  text: 'El servicio de atención fue muy rápido y eficiente. El pago contraentrega me dio mucha confianza!',
                   rating: 5,
                 },
                 {
@@ -275,7 +326,7 @@ function ProductContent() {
                         <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
                       ))}
                   </div>
-                  <p className="text-white/80 italic">"{testimonial.text}"</p>
+                  <p className="text-white/80 italic">{`"${testimonial.text}"`}</p>
                   <p className="text-cyan-400 font-semibold">{testimonial.name}</p>
                 </div>
               ))}
@@ -293,11 +344,11 @@ function ProductContent() {
               {[
                 {
                   question: '¿Cuál es el tiempo de envío?',
-                  answer: 'Realizamos envíos a todo el país en 1-3 días hábiles después de confirmar tu pago.',
+                  answer: 'Realizamos envíos a todo el país en 1-3 días hábiles. El envío es completamente GRATIS.',
                 },
                 {
-                  question: '¿Qué métodos de pago aceptan?',
-                  answer: 'Aceptamos transferencias bancarias, pago móvil, tarjetas de crédito y compras por WhatsApp.',
+                  question: '¿Cómo funciona el pago contraentrega?',
+                  answer: 'Pagas cuando recibes tu producto en la puerta de tu casa. No necesitas pagar nada por adelantado.',
                 },
                 {
                   question: '¿El producto tiene garantía?',
@@ -320,10 +371,12 @@ function ProductContent() {
           <div className="glass-dark rounded-3xl p-12 text-center space-y-6 mb-12">
             <h2 className="text-4xl font-bold text-white">¿Listo para tu compra?</h2>
             <p className="text-white/70 text-lg max-w-2xl mx-auto">
-              Contáctanos por WhatsApp para completar tu pedido rápidamente y sin complicaciones.
+              Completa tu pedido con envío gratis y pago contraentrega. Sin riesgos, pagas cuando lo recibas.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <WhatsAppButton message={whatsappMessage} />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
+              <div className="flex-1">
+                <BuyNowButton product={product} quantity={quantity} />
+              </div>
               <Link
                 href="/"
                 className="glass-button text-white hover:shadow-lg py-4 px-8 text-lg font-semibold transition-all"
