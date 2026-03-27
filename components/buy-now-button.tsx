@@ -49,10 +49,10 @@ export function BuyNowButton({
     <>
       <button
         onClick={handleBuyNow}
-        className={`w-full cta-buy-button text-white py-4 text-lg font-bold inline-flex items-center justify-center gap-3 rounded-2xl transition-all ${className}`}
+        className={`w-full cta-buy-button text-white py-5 text-xl font-extrabold inline-flex items-center justify-center gap-3 rounded-2xl ${className}`}
       >
-        <ShoppingBag size={24} />
-        Comprarlo Ahora
+        <ShoppingBag size={28} className="drop-shadow-lg" />
+        <span className="drop-shadow-lg uppercase tracking-wide">Comprarlo Ahora</span>
       </button>
       <OrderFormDialog open={open} onOpenChange={setOpen} />
     </>

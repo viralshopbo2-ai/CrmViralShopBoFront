@@ -9,74 +9,138 @@ body {
   color: white;
 }
 
-/* Animated CTA Button */
-@keyframes pulse-glow {
+/* Animated CTA Button - Super llamativo */
+@keyframes cta-scale-bounce {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(168, 85, 247, 0.3), 0 0 60px rgba(34, 211, 238, 0.2);
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+  }
+  25% {
+    transform: scale(1.08) translateY(-4px);
   }
   50% {
-    box-shadow: 0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.5), 0 0 80px rgba(34, 211, 238, 0.3);
-    transform: scale(1.02);
+    transform: scale(0.95) translateY(2px);
+  }
+  75% {
+    transform: scale(1.05) translateY(-2px);
   }
 }
 
-@keyframes gradient-shift {
+@keyframes cta-gradient-flow {
   0% {
     background-position: 0% 50%;
+    filter: hue-rotate(0deg);
   }
-  50% {
+  33% {
     background-position: 100% 50%;
+    filter: hue-rotate(30deg);
+  }
+  66% {
+    background-position: 50% 100%;
+    filter: hue-rotate(-30deg);
   }
   100% {
     background-position: 0% 50%;
+    filter: hue-rotate(0deg);
   }
 }
 
-@keyframes bounce-subtle {
+@keyframes cta-glow-pulse {
   0%, 100% {
-    transform: translateY(0);
+    box-shadow: 
+      0 0 10px rgba(236, 72, 153, 0.6),
+      0 0 30px rgba(168, 85, 247, 0.5),
+      0 0 50px rgba(6, 182, 212, 0.4),
+      0 0 70px rgba(236, 72, 153, 0.3),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
   }
   50% {
-    transform: translateY(-3px);
+    box-shadow: 
+      0 0 20px rgba(6, 182, 212, 0.8),
+      0 0 50px rgba(236, 72, 153, 0.6),
+      0 0 80px rgba(168, 85, 247, 0.5),
+      0 0 100px rgba(6, 182, 212, 0.4),
+      inset 0 0 30px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes cta-shine-sweep {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    left: 200%;
+    opacity: 0;
+  }
+}
+
+@keyframes cta-border-dance {
+  0%, 100% {
+    border-color: rgba(6, 182, 212, 0.8);
+  }
+  33% {
+    border-color: rgba(236, 72, 153, 0.8);
+  }
+  66% {
+    border-color: rgba(168, 85, 247, 0.8);
   }
 }
 
 .cta-buy-button {
-  background: linear-gradient(270deg, #06b6d4, #a855f7, #ec4899, #06b6d4);
-  background-size: 300% 300%;
-  animation: gradient-shift 3s ease infinite, pulse-glow 2s ease-in-out infinite, bounce-subtle 1.5s ease-in-out infinite;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #ec4899, #a855f7, #06b6d4, #22d3ee, #ec4899);
+  background-size: 400% 400%;
+  animation: 
+    cta-gradient-flow 3s ease infinite,
+    cta-scale-bounce 2s ease-in-out infinite,
+    cta-glow-pulse 1.5s ease-in-out infinite,
+    cta-border-dance 2s linear infinite;
+  border: 3px solid rgba(6, 182, 212, 0.8);
   position: relative;
   overflow: hidden;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .cta-buy-button::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  height: 100%;
   background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 70%
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.4),
+    transparent
   );
-  animation: shine 2s linear infinite;
+  animation: cta-shine-sweep 2s ease-in-out infinite;
+  transform: skewX(-20deg);
 }
 
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(45deg);
-  }
+.cta-buy-button::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(135deg, #06b6d4, #a855f7, #ec4899, #06b6d4);
+  background-size: 400% 400%;
+  animation: cta-gradient-flow 3s ease infinite;
+  border-radius: inherit;
+  z-index: -1;
+  filter: blur(15px);
+  opacity: 0.7;
 }
 
 .cta-buy-button:hover {
-  animation: gradient-shift 1.5s ease infinite, pulse-glow 1s ease-in-out infinite;
-  transform: scale(1.05);
+  animation: 
+    cta-gradient-flow 1.5s ease infinite,
+    cta-glow-pulse 0.8s ease-in-out infinite,
+    cta-border-dance 1s linear infinite;
+  transform: scale(1.1);
 }
