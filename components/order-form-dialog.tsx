@@ -47,11 +47,34 @@ const DEPARTAMENTOS = [
   'Pando',
 ];
 
+// Función para calcular descuento por cantidad
+function calculateDiscount(quantity: number): number {
+  if (quantity >= 3) return 0.20; // 20% descuento
+  if (quantity >= 2) return 0.15; // 15% descuento
+  return 0; // Sin descuento
+}
+
 export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
-  const { items, total, clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const { success, error } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Calcular subtotal (precio sin descuento)
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+
+  // Calcular descuento total
+  const totalDiscount = items.reduce((sum, item) => {
+    const discountPercent = calculateDiscount(item.quantity);
+    const itemTotal = item.product.price * item.quantity;
+    return sum + (itemTotal * discountPercent);
+  }, 0);
+
+  // Calcular total final con descuento
+  const finalTotal = subtotal - totalDiscount;
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
     apellido: '',
@@ -118,7 +141,8 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
         referencia: formData.referencia,
         items: orderItems,
         subtotal: subtotal,
-        total: total,
+        descuento: totalDiscount,
+        total: finalTotal,
       };
 
       const response = await fetch('/api/orders', {
@@ -351,22 +375,58 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
               Resumen del Pedido
             </h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
-              {items.map((item) => (
-                <div key={item.product.id} className="flex justify-between text-sm">
-                  <span className="text-zinc-300">
-                    {item.product.name} x{item.quantity}
-                  </span>
-                  <span className="text-white font-medium">
-                    Bs. {(item.product.price * item.quantity).toFixed(2)}
+              {items.map((item) => {
+                const discountPercent = calculateDiscount(item.quantity);
+                return (
+                  <div key={item.product.id} className="flex justify-between text-sm">
+                    <span className="text-zinc-300">
+                      {item.product.name} x{item.quantity}
+                      {discountPercent > 0 && (
+                        <span className="ml-2 text-xs text-emerald-400">
+                          (-{(discountPercent * 100).toFixed(0)}%)
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-white font-medium">
+                      Bs. {(item.product.price * item.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="border-t border-zinc-700 pt-3 space-y-2">
+              {/* Subtotal */}
+              <div className="flex justify-between text-sm">
+                <span className="text-zinc-400">Subtotal</span>
+                <span className="text-zinc-300">
+                  Bs. {subtotal.toFixed(2)}
+                </span>
+              </div>
+              
+              {/* Descuento (solo si hay descuento) */}
+              {totalDiscount > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-emerald-400">Descuento</span>
+                  <span className="text-emerald-400 font-medium">
+                    - Bs. {totalDiscount.toFixed(2)}
                   </span>
                 </div>
-              ))}
-            </div>
-            <div className="border-t border-zinc-700 pt-2 flex justify-between">
-              <span className="text-white font-semibold">Total</span>
-              <span className="text-lg font-bold text-cyan-400">
-                Bs. {total.toFixed(2)}
-              </span>
+              )}
+              
+              {/* Total Final */}
+              <div className="flex justify-between pt-2 border-t border-zinc-700">
+                <span className="text-white font-semibold">Total a Pagar</span>
+                <div className="text-right">
+                  {totalDiscount > 0 && (
+                    <span className="text-sm text-zinc-500 line-through mr-2">
+                      Bs. {subtotal.toFixed(2)}
+                    </span>
+                  )}
+                  <span className="text-lg font-bold text-cyan-400">
+                    Bs. {finalTotal.toFixed(2)}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
