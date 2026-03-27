@@ -121,7 +121,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
         total: total,
       };
 
-      const response = await fetch('http://apiviralstore.viralshopbo.com/orders', {
+      const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
