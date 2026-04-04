@@ -7,11 +7,10 @@ export const products: Product[] = [
     price: 259.0,
     image: '/masajeador/masajeador_hd.jpg',
     images: [
-      '/masajeador/masajeador2_.jpg',
-      '/masajeador/masajeador3_.jpg',
-      '/masajeador/masajeador4_.jpg',
-      '/masajeador/masajeador1.jpg',
       '/masajeador/masajeador2.jpg',
+      '/masajeador/masajeador1.jpg',
+      '/masajeador/masajeador3_.jpg',
+      '/masajeador/masajeador2_.jpg',
     ],
     category: 'wellness',
     description:
