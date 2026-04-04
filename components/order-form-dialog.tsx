@@ -43,8 +43,12 @@ const DEPARTAMENTOS = [
   'Potosí',
   'Tarija',
   'Chuquisaca',
-  'Beni',
+  'Trinidad ',
   'Pando',
+  'Rurrenavaque',
+  'Riberalta',
+  'Guayaramerin',
+  'Yacuiba',
 ];
 
 // Función para calcular descuento por cantidad
