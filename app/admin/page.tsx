@@ -125,13 +125,21 @@ function AdminContent() {
               <h1 className="text-5xl font-bold text-white">Panel de Administración</h1>
               <p className="text-white/60 mt-2">Gestiona tu catálogo de productos</p>
             </div>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="glass-button bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:shadow-lg inline-flex items-center gap-2"
-            >
-              {showForm ? <X size={20} /> : <Plus size={20} />}
-              {showForm ? 'Cancelar' : 'Nuevo Producto'}
-            </button>
+            <div className="flex gap-3">
+              <Link
+                href="/adminordenes"
+                className="glass-button bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:shadow-lg inline-flex items-center gap-2"
+              >
+                Ver Órdenes
+              </Link>
+              <button
+                onClick={() => setShowForm(!showForm)}
+                className="glass-button bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:shadow-lg inline-flex items-center gap-2"
+              >
+                {showForm ? <X size={20} /> : <Plus size={20} />}
+                {showForm ? 'Cancelar' : 'Nuevo Producto'}
+              </button>
+            </div>
           </div>
 
           {/* Stats */}
