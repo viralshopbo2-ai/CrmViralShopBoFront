@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ToastProvider } from '@/lib/toast-context'
@@ -12,8 +12,6 @@ export const metadata: Metadata = {
   title: 'Viral Shop Bo',
   description: 'La mejor tienda online de artículos con envío a domicilio. Electrónica, accesorios, hogar y más.',
   generator: 'v0.app',
-  
-    themeColor: '#5533FF',
   icons: {
     icon: [
       {
@@ -31,18 +29,20 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
   keywords: ['dropshipping', 'tienda online', 'envío domicilio', 'compras online'],
   openGraph: {
     title: 'Viral Shop Bo - Tienda de Dropshipping',
     description: 'Artículos premium con envío rápido a domicilio',
     type: 'website',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#5533FF',
 }
 
 export default function RootLayout({
