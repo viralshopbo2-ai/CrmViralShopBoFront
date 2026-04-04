@@ -38,7 +38,7 @@ function OrdersContent() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://apiviralstore.viralshopbo.com/orders');
+        const response = await fetch('/api/orders');
         if (!response.ok) {
           throw new Error('No se pudieron cargar las órdenes');
         }
