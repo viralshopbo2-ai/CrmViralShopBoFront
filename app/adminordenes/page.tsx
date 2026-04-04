@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navigation } from '@/components/navigation';
@@ -44,8 +46,6 @@ function FormattedDate({ dateString }: { dateString: string }) {
 
   return <span className="text-cyan-400 text-xs">{formatted}</span>;
 }
-
-'use client';
 
 function OrdersContent() {
   const [orders, setOrders] = useState<Order[]>([]);
