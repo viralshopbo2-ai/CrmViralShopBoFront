@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navigation } from '@/components/navigation';
@@ -23,10 +21,31 @@ interface Order {
   provincia: string;
   municipio: string;
   referencia: string;
+  createdAt: string;
   items: OrderItem[];
   subtotal: string;
   total: string;
 }
+
+function FormattedDate({ dateString }: { dateString: string }) {
+  const [formatted, setFormatted] = useState('');
+
+  useEffect(() => {
+    const date = new Date(dateString);
+    const formatted = date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    setFormatted(formatted);
+  }, [dateString]);
+
+  return <span className="text-cyan-400 text-xs">{formatted}</span>;
+}
+
+'use client';
 
 function OrdersContent() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -61,12 +80,6 @@ function OrdersContent() {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
-  const stats = [
-    { label: 'Total de Órdenes', value: orders.length },
-    { label: 'Ingresos Totales', value: `Bs. ${orders.reduce((sum, order) => sum + parseFloat(order.total), 0).toFixed(2)}` },
-    { label: 'Items Vendidos', value: orders.reduce((sum, order) => sum + order.items.reduce((itemSum, item) => itemSum + item.cantidad, 0), 0) },
-  ];
-
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -81,16 +94,6 @@ function OrdersContent() {
             </Link>
             <h1 className="text-5xl font-bold text-white">Gestión de Órdenes</h1>
             <p className="text-white/60 mt-2">Visualiza y gestiona todas las órdenes de clientes</p>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            {stats.map((stat) => (
-              <div key={stat.label} className="glass-dark rounded-2xl p-6">
-                <p className="text-white/60 text-sm font-semibold">{stat.label}</p>
-                <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
-              </div>
-            ))}
           </div>
 
           {/* Loading State */}
@@ -125,17 +128,13 @@ function OrdersContent() {
                         <Package size={24} className="text-white" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                          <h3 className="text-lg font-bold text-white">
-                            Orden #{order.id}
-                          </h3>
-                          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400">
-                            Completada
-                          </span>
-                        </div>
-                        <p className="text-white/60 text-sm">
+                        <h3 className="text-lg font-bold text-white mb-1">
+                          Orden #{order.id}
+                        </h3>
+                        <p className="text-white/60 text-sm mb-2">
                           {order.nombre} {order.apellido}
                         </p>
+                        <FormattedDate dateString={order.createdAt} />
                       </div>
                     </div>
                     <div className="flex items-center gap-6">
