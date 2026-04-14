@@ -161,6 +161,35 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
         throw new Error('Error al procesar el pedido');
       }
 
+
+      // >>> INICIO RASTREO TIKTOK PIXEL <<<
+      if (typeof window !== 'undefined' && (window as any).ttq) {
+        (window as any).ttq.track('InitiateCheckout', {
+          contents: items.map((item) => ({
+            content_id: item.product.id.toString(),
+            content_type: 'product',
+            content_name: item.product.name,
+            quantity: item.quantity,
+            price: item.product.price,
+          })),
+          value: finalTotal,
+          currency: 'BOB', // Moneda de Bolivia
+        });
+      }
+      // >>> FIN RASTREO TIKTOK PIXEL <<<
+
+      // >>> RASTREO FACEBOOK PIXEL (AÑADIDO) <<<
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'InitiateCheckout', {
+          content_ids: items.map((item) => item.product.id.toString()),
+          content_type: 'product',
+          value: finalTotal,
+          currency: 'BOB',
+        });
+      }
+      // >>> FIN RASTREO FACEBOOK PIXEL <<<
+
+
       // Mostrar éxito
       setIsSuccess(true);
       success('Pedido enviado correctamente');
