@@ -59,12 +59,12 @@ export function ProductImageGallery({
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Imagen principal */}
-      <div className="relative w-full aspect-square rounded-2xl overflow-hidden group">
-        <Image
+      <div className="relative w-full rounded-2xl overflow-hidden group" style={{ height: '420px' }}>
+      <Image
           src={images[selectedIndex]}
           alt={`${productName} - Imagen ${selectedIndex + 1}`}
           fill
-          className="object-cover transition-transform duration-500"
+          className="object-contain transition-transform duration-500"
           priority
         />
         
