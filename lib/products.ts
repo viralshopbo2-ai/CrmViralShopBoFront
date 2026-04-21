@@ -9,8 +9,8 @@ export const products: Product[] = [
     images: [
       '/masajeador/masajeador2.jpg',
       '/masajeador/masajeador1.jpg',
-      '/masajeador/masajeador8.jpg',
-      '/masajeador/masajeador9.jpg',
+      '/masajeador/masajeador8.jpeg',
+      '/masajeador/masajeador9.jpeg',
       '/masajeador/masajeador3_.jpg',
       '/masajeador/masajeador2_.jpg',
     ],
