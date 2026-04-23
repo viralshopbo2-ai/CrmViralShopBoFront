@@ -1,22 +1,50 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Navigation } from '@/components/navigation';
 import { HeroSection } from '@/components/hero-section';
 import { ProductGrid } from '@/components/product-grid';
 import { ContactSection } from '@/components/contact-section';
 import { CartProvider } from '@/lib/cart-context';
-import { products, categories, getFeaturedProducts } from '@/lib/products';
-import { Mail, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Product } from '@/lib/types';
+import { products, categories } from '@/lib/products';
+import { Mail, Facebook } from 'lucide-react';
 
 function HomeContent() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [email, setEmail] = useState('');
+  const [apiProducts, setApiProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch('/api/products?page=1&size=100')
+      .then(r => r.json())
+      .then(data => {
+        const items: any[] = Array.isArray(data) ? data : (data.data ?? data.items ?? []);
+        const mapped: Product[] = items.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description ?? '',
+          price: Number(p.price) || 0,
+          image: p.images?.[0] ?? '',
+          images: p.images ?? [],
+          category: 'home' as const,
+          rating: Number(p.stars) || 0,
+          reviews: Number(p.reviews) || 0,
+          stock: Number(p.stock) || 0,
+          features: p.characteristics ?? [],
+          video: p.video || undefined,
+        }));
+        setApiProducts(mapped);
+      })
+      .catch(() => {});
+  }, []);
+
+  const allProducts = [...products, ...apiProducts];
 
   const displayedProducts = selectedCategory
-    ? products.filter((p) => p.category === selectedCategory)
-    : products;
+    ? allProducts.filter((p) => p.category === selectedCategory)
+    : allProducts;
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();

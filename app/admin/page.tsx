@@ -44,9 +44,9 @@ function ProductsSection() {
       return;
     }
     if (editingId) {
-      setAdminProducts(adminProducts.map(p => p.id === editingId ? { ...p, ...formData } : p));
+      setAdminProducts(adminProducts.map(p => p.id === editingId ? { ...p, ...formData } as Product : p));
     } else {
-      setAdminProducts([...adminProducts, { ...formData, id: Date.now().toString() }]);
+      setAdminProducts([...adminProducts, { ...formData, id: Date.now().toString() } as Product]);
     }
     resetForm();
   };

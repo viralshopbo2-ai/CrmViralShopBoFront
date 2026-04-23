@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE = 'https://apiviralstore.viralshopbo.com';
 
@@ -8,10 +8,11 @@ function getAuthHeader(request: NextRequest): Record<string, string> {
 }
 
 // PATCH /api/roles/[id]
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await context.params;
         const body = await request.json();
-        const response = await fetch(`${API_BASE}/roles/${params.id}`, {
+        const response = await fetch(`${API_BASE}/roles/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,9 +28,10 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 // DELETE /api/roles/[id]
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
     try {
-        const response = await fetch(`${API_BASE}/roles/${params.id}`, {
+        const { id } = await context.params;
+        const response = await fetch(`${API_BASE}/roles/${id}`, {
             method: 'DELETE',
             headers: { ...getAuthHeader(request) },
         });

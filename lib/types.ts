@@ -13,6 +13,7 @@ export interface Product {
   specs?: Record<string, string>;
   features?: string[];
   warranty?: string;
+  video?: string;
 }
 
 export interface CartItem {

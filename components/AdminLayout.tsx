@@ -33,7 +33,7 @@ const ICONS = {
 // Ajusta los href a tus rutas reales según la carpeta app/
 const NAV: NavItem[] = [
     { label: "Dashboard", icon: "dashboard", href: "/admin"           },
-    { label: "Productos", icon: "products",  href: "/admin/productos"  },
+    { label: "Productos", icon: "products",  href: "/admin/products"  },
     { label: "Órdenes",   icon: "orders",    href: "/admin/orders"     },
     { label: "Usuarios",  icon: "users",     href: "/admin/users"   },
     { label: "Roles",     icon: "roles",     href: "/admin/roles"      },

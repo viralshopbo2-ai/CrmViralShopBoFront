@@ -3,24 +3,67 @@
 import { Navigation } from '@/components/navigation';
 import { CartProvider, useCart } from '@/lib/cart-context';
 import { useToast } from '@/lib/toast-context';
-import { products, getProductById, getProductsByCategory } from '@/lib/products';
+import { getProductById, getProductsByCategory } from '@/lib/products';
+import { Product } from '@/lib/types';
 import { ProductCard } from '@/components/product-card';
 import { BuyNowButton } from '@/components/buy-now-button';
 import { DiscountCards } from '@/components/discount-cards';
 import { ProductImageGallery } from '@/components/product-image-gallery';
-import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, ShoppingCart, ArrowLeft, Truck, Shield, RefreshCw, Check, Gift, Banknote } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+function mapApiProduct(p: any): Product {
+  return {
+    id: p.id,
+    name: p.name,
+    description: p.description ?? '',
+    price: Number(p.price) || 0,
+    image: p.images?.[0] ?? '',
+    images: p.images ?? [],
+    category: 'home' as const,
+    rating: Number(p.stars) || 0,
+    reviews: Number(p.reviews) || 0,
+    stock: Number(p.stock) || 0,
+    features: p.characteristics ?? [],
+    specs: p.specifications?.length
+      ? Object.fromEntries(p.specifications.map((s: string, i: number) => [`Especificación ${i + 1}`, s]))
+      : undefined,
+    video: p.video || undefined,
+  };
+}
+
 function ProductContent() {
   const params = useParams();
   const productId = params.id as string;
-  const product = getProductById(productId);
   const { addToCart } = useCart();
   const { success } = useToast();
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | null>(() => getProductById(productId) ?? null);
+  const [loading, setLoading] = useState(!product);
+
+  useEffect(() => {
+    if (product) return;
+    fetch(`/api/products/${productId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data?.id) setProduct(mapApiProduct(data));
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [productId, product]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Navigation />
+        <div className="pt-24 px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="animate-pulse text-white/40 text-lg mt-20">Cargando producto...</div>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -292,6 +335,26 @@ function ProductContent() {
               </div>
             )}
           </div>
+
+          {/* Video Section */}
+          {product.video && (
+            <div className="space-y-6 mb-20">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Video del producto</h2>
+                <p className="text-white/60">Mira el producto en acción</p>
+              </div>
+              <div className="glass-dark rounded-2xl overflow-hidden">
+                <video
+                  src={product.video}
+                  controls
+                  playsInline
+                  className="w-full max-h-[560px] object-contain bg-black"
+                >
+                  Tu navegador no soporta la reproducción de video.
+                </video>
+              </div>
+            </div>
+          )}
 
           {/* Testimonials Section */}
           <div className="space-y-8 mb-20">
