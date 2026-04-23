@@ -1,181 +1,29 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Navigation } from '@/components/navigation';
+import { useRouter } from 'next/navigation';
 import { CartProvider } from '@/lib/cart-context';
 import { products as initialProducts } from '@/lib/products';
 import { Product } from '@/lib/types';
 import {
-  Edit2, Trash2, Plus, ArrowLeft, Save, X,
-  ShoppingBag, Users, Shield, Package, LayoutDashboard,
-  ChevronRight, Menu
+  Edit2, Trash2, Plus, Save, X,
+  ShoppingBag, Users, Shield, Package,
+  ChevronRight,
 } from 'lucide-react';
 import Image from 'next/image';
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from '@/components/AdminLayout';
 
-// ─── Sidebar Menu Config ───────────────────────────────────────────────────────
 const menuItems = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: LayoutDashboard,
-    href: '/admin',
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-400/10',
-  },
-  {
-    id: 'products',
-    label: 'Productos',
-    icon: Package,
-    href: '/admin',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-400/10',
-  },
-  {
-    id: 'orders',
-    label: 'Órdenes',
-    icon: ShoppingBag,
-    href: '/admin/orders',
-    color: 'text-blue-400',
-    bg: 'bg-blue-400/10',
-  },
-  {
-    id: 'users',
-    label: 'Usuarios',
-    icon: Users,
-    href: '/admin/users',
-    color: 'text-purple-400',
-    bg: 'bg-purple-400/10',
-  },
-  {
-    id: 'roles',
-    label: 'Roles',
-    icon: Shield,
-    href: '/admin/roles',
-    color: 'text-orange-400',
-    bg: 'bg-orange-400/10',
-  },
+  { id: 'products', label: 'Productos', icon: Package,     href: '/admin/products', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+  { id: 'orders',   label: 'Órdenes',   icon: ShoppingBag, href: '/admin/orders',   color: 'text-blue-400',    bg: 'bg-blue-400/10'    },
+  { id: 'users',    label: 'Usuarios',  icon: Users,       href: '/admin/users',    color: 'text-purple-400',  bg: 'bg-purple-400/10'  },
+  { id: 'roles',    label: 'Roles',     icon: Shield,      href: '/admin/roles',    color: 'text-orange-400',  bg: 'bg-orange-400/10'  },
 ];
 
-// ─── Sidebar Component ─────────────────────────────────────────────────────────
-function Sidebar({
-                   activeSection,
-                   onSelect,
-                   isOpen,
-                   onClose,
-                 }: {
-  activeSection: string;
-  onSelect: (id: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  return (
-      <>
-        {/* Overlay mobile */}
-        {isOpen && (
-            <div
-                className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-                onClick={onClose}
-            />
-        )}
-
-        {/* Sidebar */}
-        <aside
-            className={`
-          fixed top-16 left-0 h-[calc(100vh-4rem)] z-40 w-64
-          glass-dark border-r border-white/10
-          transition-transform duration-300
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 lg:static lg:h-auto lg:z-auto
-        `}
-        >
-          <div className="p-4 space-y-1 pt-6">
-            <p className="text-white/30 text-xs font-bold uppercase tracking-widest px-3 mb-4">
-              Menú Principal
-            </p>
-
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeSection === item.id;
-
-              // Órdenes, usuarios y roles tienen su propia página — usar Link directo
-              if (item.id === 'orders' || item.id === 'users' || item.id === 'roles') {
-                return (
-                    <Link
-                        key={item.id}
-                        href={item.href}
-                        className={`
-                    w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group
-                    ${isActive
-                            ? `${item.bg} border border-white/10`
-                            : 'hover:bg-white/5'
-                        }
-                  `}
-                        onClick={onClose}
-                    >
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${item.bg}`}>
-                        <Icon size={16} className={item.color} />
-                      </div>
-                      <span className={`font-medium text-sm ${isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
-                    {item.label}
-                  </span>
-                      <ChevronRight size={14} className={`ml-auto ${isActive ? item.color : 'text-white/20 group-hover:text-white/40'}`} />
-                    </Link>
-                );
-              }
-
-              return (
-                  <button
-                      key={item.id}
-                      onClick={() => { onSelect(item.id); onClose(); }}
-                      className={`
-                  w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group
-                  ${isActive
-                          ? `${item.bg} border border-white/10`
-                          : 'hover:bg-white/5'
-                      }
-                `}
-                  >
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${item.bg}`}>
-                      <Icon size={16} className={item.color} />
-                    </div>
-                    <span className={`font-medium text-sm ${isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
-                  {item.label}
-                </span>
-                    {isActive && (
-                        <div className={`ml-auto w-2 h-2 rounded-full ${item.color.replace('text-', 'bg-')}`} />
-                    )}
-                  </button>
-              );
-            })}
-
-            {/* Divider */}
-            <div className="border-t border-white/10 my-4" />
-
-            {/* Back to store */}
-            <Link
-                href="/"
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-all group"
-            >
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5">
-                <ArrowLeft size={16} className="text-white/40" />
-              </div>
-              <span className="font-medium text-sm text-white/40 group-hover:text-white">
-              Ir a la Tienda
-            </span>
-            </Link>
-          </div>
-        </aside>
-      </>
-  );
-}
-
-// ─── Products Section ──────────────────────────────────────────────────────────
 function ProductsSection() {
   const [adminProducts, setAdminProducts] = useState<Product[]>(initialProducts);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId]         = useState<string | null>(null);
+  const [showForm, setShowForm]           = useState(false);
   const [formData, setFormData] = useState({
     name: '', price: 0, category: '', description: '',
     image: '', rating: 0, reviews: 0, stock: 0, featured: false,
@@ -184,20 +32,19 @@ function ProductsSection() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const target = e.target as HTMLInputElement;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? target.checked : type === 'number' ? parseFloat(value) : value,
     }));
   };
 
-  const handleSaveProduct = () => {
+  const handleSave = () => {
     if (!formData.name || !formData.price || !formData.category) {
       alert('Por favor completa los campos requeridos');
       return;
     }
     if (editingId) {
-      setAdminProducts(adminProducts.map((p) => p.id === editingId ? { ...p, ...formData } : p));
-      setEditingId(null);
+      setAdminProducts(adminProducts.map(p => p.id === editingId ? { ...p, ...formData } : p));
     } else {
       setAdminProducts([...adminProducts, { ...formData, id: Date.now().toString() }]);
     }
@@ -216,7 +63,7 @@ function ProductsSection() {
 
   const handleDelete = (id: string) => {
     if (confirm('¿Eliminar este producto?')) {
-      setAdminProducts(adminProducts.filter((p) => p.id !== id));
+      setAdminProducts(adminProducts.filter(p => p.id !== id));
     }
   };
 
@@ -228,7 +75,6 @@ function ProductsSection() {
 
   return (
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-white">Productos</h2>
@@ -244,13 +90,12 @@ function ProductsSection() {
           </button>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: 'Total', value: adminProducts.length, color: 'text-cyan-400' },
-            { label: 'En Stock', value: adminProducts.filter(p => p.stock > 0).length, color: 'text-emerald-400' },
-            { label: 'Destacados', value: adminProducts.filter(p => p.featured).length, color: 'text-yellow-400' },
-          ].map((s) => (
+            { label: 'Total',      value: adminProducts.length,                           color: 'text-cyan-400'    },
+            { label: 'En Stock',   value: adminProducts.filter(p => p.stock > 0).length,  color: 'text-emerald-400' },
+            { label: 'Destacados', value: adminProducts.filter(p => p.featured).length,   color: 'text-yellow-400'  },
+          ].map(s => (
               <div key={s.label} className="glass-dark rounded-2xl p-4">
                 <p className="text-white/50 text-xs font-semibold">{s.label}</p>
                 <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
@@ -258,7 +103,6 @@ function ProductsSection() {
           ))}
         </div>
 
-        {/* Form */}
         {showForm && (
             <div className="glass-dark rounded-2xl p-6 space-y-4">
               <h3 className="text-xl font-bold text-white">{editingId ? 'Editar Producto' : 'Nuevo Producto'}</h3>
@@ -301,7 +145,7 @@ function ProductsSection() {
               </div>
               <div className="flex gap-3 justify-end pt-2">
                 <button onClick={resetForm} className="glass-button text-white/70 text-sm" style={{ background: 'rgba(255,255,255,0.05)' }}>Cancelar</button>
-                <button onClick={handleSaveProduct} className="glass-button text-white text-sm inline-flex items-center gap-2" style={{ background: 'linear-gradient(to right, #10b981, #059669)' }}>
+                <button onClick={handleSave} className="glass-button text-white text-sm inline-flex items-center gap-2" style={{ background: 'linear-gradient(to right, #10b981, #059669)' }}>
                   <Save size={16} />
                   {editingId ? 'Actualizar' : 'Crear'}
                 </button>
@@ -309,7 +153,6 @@ function ProductsSection() {
             </div>
         )}
 
-        {/* Table */}
         <div className="glass-dark rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -324,7 +167,7 @@ function ProductsSection() {
               </tr>
               </thead>
               <tbody>
-              {adminProducts.map((product) => (
+              {adminProducts.map(product => (
                   <tr key={product.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                     <td className="py-3 px-4">
                       <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white/10">
@@ -367,8 +210,20 @@ function ProductsSection() {
   );
 }
 
-// ─── Dashboard Section ─────────────────────────────────────────────────────────
-function DashboardSection({ onNavigate }: { onNavigate: (id: string) => void }) {
+// ─── Dashboard Section ────────────────────────────────────────────────────────
+function DashboardSection({ onNavigate }: { onNavigate: (section: string) => void }) {
+  const router = useRouter();
+
+  const handleCardClick = (item: typeof menuItems[0]) => {
+    // Productos se maneja inline en esta misma página
+    if (item.id === 'products') {
+      onNavigate('products');
+    } else {
+      // Órdenes, Usuarios y Roles tienen su propia página
+      router.push(item.href);
+    }
+  };
+
   return (
       <div className="space-y-6">
         <div>
@@ -377,12 +232,12 @@ function DashboardSection({ onNavigate }: { onNavigate: (id: string) => void }) 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {menuItems.filter(m => m.id !== 'dashboard').map((item) => {
+          {menuItems.map(item => {
             const Icon = item.icon;
             return (
                 <button
                     key={item.id}
-                    onClick={() => onNavigate(item.id)}
+                    onClick={() => handleCardClick(item)}
                     className="glass-dark rounded-2xl p-5 text-left hover:border-white/20 border border-white/5 transition-all hover:-translate-y-1 group"
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${item.bg}`}>
@@ -406,73 +261,28 @@ function DashboardSection({ onNavigate }: { onNavigate: (id: string) => void }) 
   );
 }
 
-// ─── Coming Soon placeholder ───────────────────────────────────────────────────
-function ComingSoon({ title, icon: Icon, color }: { title: string; icon: any; color: string }) {
-  return (
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-bold text-white">{title}</h2>
-          <p className="text-white/50 text-sm mt-1">Gestión de {title.toLowerCase()}</p>
-        </div>
-        <div className="glass-dark rounded-2xl p-16 text-center border border-white/5">
-          <Icon size={48} className={`mx-auto mb-4 ${color} opacity-30`} />
-          <p className="text-white/50 text-lg font-semibold">Módulo en construcción</p>
-          <p className="text-white/30 text-sm mt-2">Próximamente disponible</p>
-        </div>
-      </div>
-  );
-}
-
-// ─── Main Admin Page ───────────────────────────────────────────────────────────
+// ─── Admin Content ────────────────────────────────────────────────────────────
 function AdminContent() {
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderSection = () => {
     switch (activeSection) {
       case 'dashboard': return <DashboardSection onNavigate={setActiveSection} />;
       case 'products':  return <ProductsSection />;
-      case 'users':     return <ComingSoon title="Usuarios" icon={Users} color="text-purple-400" />;
-      case 'roles':     return <ComingSoon title="Roles" icon={Shield} color="text-orange-400" />;
       default:          return <DashboardSection onNavigate={setActiveSection} />;
     }
   };
 
   return (
-      <div className="min-h-screen">
-        <Navigation />
-
-        <div className="pt-16 flex">
-          {/* Sidebar */}
-          <Sidebar
-              activeSection={activeSection}
-              onSelect={setActiveSection}
-              isOpen={sidebarOpen}
-              onClose={() => setSidebarOpen(false)}
-          />
-
-          {/* Main Content */}
-          <main className="flex-1 min-w-0 p-6 lg:p-8 lg:ml-0">
-            {/* Mobile header */}
-            <div className="flex items-center gap-3 mb-6 lg:hidden">
-              <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="glass-card-sm p-2 text-white"
-              >
-                <Menu size={20} />
-              </button>
-              <span className="text-white font-semibold">Panel de Administración</span>
-            </div>
-
-            <div className="max-w-6xl">
-              {renderSection()}
-            </div>
-          </main>
+      <div className="px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="max-w-6xl mx-auto">
+          {renderSection()}
         </div>
       </div>
   );
 }
 
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AdminPage() {
   return (
       <AdminLayout>
