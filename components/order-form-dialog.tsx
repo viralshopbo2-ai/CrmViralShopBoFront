@@ -330,7 +330,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              <div className="hidden">
                 <Label htmlFor="provincia" className="text-zinc-300">
                   Provincia
                 </Label>
@@ -343,7 +343,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                   className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="hidden">
                 <Label htmlFor="municipio" className="text-zinc-300">
                   Municipio
                 </Label>
@@ -372,7 +372,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="hidden">
                 <Label htmlFor="numero" className="text-zinc-300">
                   Número
                 </Label>
@@ -386,7 +386,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="hidden">
               <Label htmlFor="referencia" className="text-zinc-300">
                 Referencia
               </Label>
