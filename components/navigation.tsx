@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
-import { ShoppingBag, Search, Menu, X } from 'lucide-react';
+import {ShoppingBag, Search, Menu, X, LogIn} from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export function Navigation() {
@@ -82,6 +82,28 @@ export function Navigation() {
                 )}
               </Link>
 
+              {/* 👇 AGREGA ESTO AQUÍ */}
+              <Link
+                  href="/login"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'linear-gradient(to right, #f97316, #ef4444)',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '10px',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                    textDecoration: 'none',
+                    whiteSpace: 'nowrap',
+                  }}
+              >
+                <LogIn size={16} />
+                Iniciar Sesión
+              </Link>
+              {/* 👆 HASTA AQUÍ */}
+
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -129,6 +151,18 @@ export function Navigation() {
                 <Search size={18} />
                 Buscar
               </button>
+
+
+              {/* Mobile Login */}
+              <Link
+                  href="/login"
+                  className="w-full flex items-center gap-2 glass-button text-white text-sm py-2 px-4 justify-center"
+                  onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <LogIn size={18} />
+                Iniciar Sesión
+              </Link>
+
             </div>
           )}
         </div>

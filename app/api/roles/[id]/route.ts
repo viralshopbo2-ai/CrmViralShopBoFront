@@ -1,0 +1,44 @@
+﻿import { NextRequest, NextResponse } from 'next/server';
+
+const API_BASE = 'https://apiviralstore.viralshopbo.com';
+
+function getAuthHeader(request: NextRequest): Record<string, string> {
+    const token = request.headers.get('authorization');
+    return token ? { Authorization: token } : {};
+}
+
+// PATCH /api/roles/[id]
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+    try {
+        const body = await request.json();
+        const response = await fetch(`${API_BASE}/roles/${params.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(request),
+            },
+            body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+    } catch {
+        return NextResponse.json({ message: 'Error al actualizar rol' }, { status: 500 });
+    }
+}
+
+// DELETE /api/roles/[id]
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+    try {
+        const response = await fetch(`${API_BASE}/roles/${params.id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeader(request) },
+        });
+        if (response.status === 200 || response.status === 204) {
+            return NextResponse.json({ success: true }, { status: 200 });
+        }
+        const data = await response.json();
+        return NextResponse.json(data, { status: response.status });
+    } catch {
+        return NextResponse.json({ message: 'Error al eliminar rol' }, { status: 500 });
+    }
+}
