@@ -157,22 +157,22 @@ function ProductContent() {
               </div>
 
               {/* Entrega Gratis y Pago Contraentrega */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="glass-card p-4 rounded-2xl flex items-center gap-3 border-emerald-400/30 bg-emerald-400/5">
-                  <div className="w-12 h-12 rounded-full bg-emerald-400/20 flex items-center justify-center">
-                    <Gift className="text-emerald-400" size={24} />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="glass-card p-3 rounded-2xl flex items-center gap-2 border-emerald-400/30 bg-emerald-400/5 min-w-0">
+                  <div className="w-9 h-9 shrink-0 rounded-full bg-emerald-400/20 flex items-center justify-center">
+                    <Gift className="text-emerald-400" size={18} />
                   </div>
-                  <div>
-                    <p className="text-emerald-400 font-bold text-sm">ENTREGA GRATIS</p>
+                  <div className="min-w-0">
+                    <p className="text-emerald-400 font-bold text-xs leading-tight">ENTREGA GRATIS</p>
                     <p className="text-white/60 text-xs">A todo el país</p>
                   </div>
                 </div>
-                <div className="glass-card p-4 rounded-2xl flex items-center gap-3 border-amber-400/30 bg-amber-400/5">
-                  <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center">
-                    <Banknote className="text-amber-400" size={24} />
+                <div className="glass-card p-3 rounded-2xl flex items-center gap-2 border-amber-400/30 bg-amber-400/5 min-w-0">
+                  <div className="w-9 h-9 shrink-0 rounded-full bg-amber-400/20 flex items-center justify-center">
+                    <Banknote className="text-amber-400" size={18} />
                   </div>
-                  <div>
-                    <p className="text-amber-400 font-bold text-sm">PAGO CONTRAENTREGA</p>
+                  <div className="min-w-0">
+                    <p className="text-amber-400 font-bold text-xs leading-tight">PAGO CONTRAENTREGA</p>
                     <p className="text-white/60 text-xs">Pagas cuando recibas</p>
                   </div>
                 </div>
