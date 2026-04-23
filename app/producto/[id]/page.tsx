@@ -111,7 +111,7 @@ function ProductContent() {
     <div className="min-h-screen">
       <Navigation />
 
-      <div className="pt-24 px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="pt-24 px-4 sm:px-6 lg:px-8 pb-36 lg:pb-20">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8">
@@ -245,9 +245,11 @@ function ProductContent() {
 
               {/* Action Buttons */}
               <div className="space-y-4">
-                {/* Botón principal - Comprarlo Ahora (animado y llamativo) */}
+                {/* Botón principal - solo visible en desktop */}
                 {product.stock > 0 && (
-                  <BuyNowButton product={product} quantity={quantity} />
+                  <div className="hidden lg:block">
+                    <BuyNowButton product={product} quantity={quantity} />
+                  </div>
                 )}
 
                 <button
@@ -466,6 +468,30 @@ function ProductContent() {
           )}
         </div>
       </div>
+
+      {/* Barra flotante móvil - solo visible en pantallas < lg */}
+      {product.stock > 0 && (
+        <div className="lg:hidden fixed bottom-0 inset-x-0 z-40">
+          {/* Blur backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md border-t border-white/10" />
+          <div className="relative px-4 py-3 flex items-center gap-3">
+            {/* Precio y cantidad */}
+            <div className="flex-1 min-w-0">
+              <p className="text-white/50 text-xs">Total ({quantity} ud.)</p>
+              <p className="text-cyan-400 font-bold text-lg leading-tight">
+                Bs. {finalTotal.toFixed(2)}
+                {discountPercent > 0 && (
+                  <span className="ml-2 text-emerald-400 text-xs font-semibold">-{discountPercent}%</span>
+                )}
+              </p>
+            </div>
+            {/* Botón Comprar Ahora */}
+            <div className="flex-1">
+              <BuyNowButton product={product} quantity={quantity} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
