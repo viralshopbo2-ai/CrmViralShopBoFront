@@ -351,8 +351,12 @@ function ProductsContent() {
                 headers: { Authorization: `Bearer ${getToken()}` },
             });
             const json = await res.json();
-            const list: Product[] = Array.isArray(json) ? json : (json.data || []);
-            const tot: number     = Array.isArray(json) ? json.length : (json.total || list.length);
+            const raw: any[] = Array.isArray(json) ? json : (json.data || []);
+            const list: Product[] = raw.map((p: any) => ({
+                ...p,
+                images: Array.isArray(p.images) ? p.images : [],
+            }));
+            const tot: number = Array.isArray(json) ? json.length : (json.total || raw.length);
             setProducts(list);
             setTotal(tot);
         } catch {
