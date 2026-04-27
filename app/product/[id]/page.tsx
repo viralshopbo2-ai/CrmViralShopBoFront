@@ -170,7 +170,7 @@ function ProductContent({ id }: { id: string }) {
                   addedToCart
                     ? 'bg-green-500 border-green-500 text-white'
                     : product.stock
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white border-none hover:shadow-lg'
+                    ? 'bg-linear-to-r from-blue-600 to-cyan-500 text-white border-none hover:shadow-lg'
                     : 'bg-gray-400 text-gray-600 cursor-not-allowed'
                 }`}
               >
