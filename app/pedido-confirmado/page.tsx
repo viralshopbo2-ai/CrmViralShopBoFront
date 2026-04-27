@@ -48,7 +48,7 @@ export default function PedidoConfirmadoPage() {
     if (!pedido) return;
 
     // >>> INICIO RASTREO TIKTOK PIXEL <<<
-   /* if ((window as any).ttq) {
+    if ((window as any).ttq) {
       (window as any).ttq.track('CompletePayment', {
         contents: pedido.pixelItems.map((item) => ({
           content_id: item.content_id,
@@ -60,18 +60,18 @@ export default function PedidoConfirmadoPage() {
         value: pedido.total,
         currency: 'BOB',
       });
-    }*/
+    }
     // >>> FIN RASTREO TIKTOK PIXEL <<<
 
     // >>> INICIO RASTREO FACEBOOK PIXEL <<<
-   /* if ((window as any).fbq) {
+    if ((window as any).fbq) {
       (window as any).fbq('track', 'Purchase', {
         content_ids: pedido.pixelItems.map((i) => i.content_id),
         content_type: 'product',
         value: pedido.total,
         currency: 'BOB',
       });
-    }*/
+    }
     // >>> FIN RASTREO FACEBOOK PIXEL <<<
 
     sessionStorage.removeItem('pedido_confirmado');
