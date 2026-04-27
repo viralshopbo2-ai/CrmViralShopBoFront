@@ -6,9 +6,6 @@ import Script from 'next/script'
 import './globals.css'
 import './globals-custom.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: 'Viral Shop Bo',
   description: 'La mejor tienda online de artículos con envío a domicilio. Electrónica, accesorios, hogar y más.',
@@ -54,7 +51,6 @@ export default function RootLayout({
   return (
       <html lang="es">
       <head>
-        {/* Parte del Código Base: Noscript (se ejecuta si el usuario no tiene JS) */}
         <noscript>
           <img
               height="1"

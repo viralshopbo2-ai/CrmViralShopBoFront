@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   Drawer, DrawerContent, DrawerHeader,
-  DrawerTitle, DrawerDescription, DrawerFooter,
+  DrawerTitle, DrawerDescription,
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -281,7 +281,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
         </Button>
         <Button
           type="submit" disabled={isSubmitting}
-          className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold px-5 flex flex-col items-center leading-tight h-auto py-1.5"
+          className="bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold px-5 flex flex-col items-center leading-tight h-auto py-1.5"
         >
           {isSubmitting ? (
             <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Procesando...</>

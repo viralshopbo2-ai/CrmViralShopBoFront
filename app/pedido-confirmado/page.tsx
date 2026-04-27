@@ -150,7 +150,7 @@ export default function PedidoConfirmadoPage() {
         {/* Botón OK */}
         <Button
           onClick={handleOk}
-          className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl"
+          className="w-full bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl"
         >
           Entendido, volver al inicio
         </Button>

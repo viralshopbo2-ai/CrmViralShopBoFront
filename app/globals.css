@@ -22,7 +22,7 @@
 
 @keyframes cta-gradient-flow {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
     filter: hue-rotate(0deg);
   }
   33% {
@@ -34,7 +34,7 @@
     filter: hue-rotate(-30deg);
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
     filter: hue-rotate(0deg);
   }
 }

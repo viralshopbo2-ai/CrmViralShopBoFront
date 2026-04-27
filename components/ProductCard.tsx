@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, ShoppingCart } from 'lucide-react';
-import { Product } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 import { useState } from 'react';
+import {Product} from "@/lib/types";
 
 interface ProductCardProps {
   product: Product;
@@ -42,17 +42,16 @@ export function ProductCard({ product }: ProductCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {product.inStock && (
+          {product.stock && (
             <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-white text-xs font-semibold">
               En Stock
             </div>
           )}
 
-          {product.shippingDays <= 2 && (
-            <div className="absolute top-3 left-3 bg-blue-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-white text-xs font-semibold">
-              Envío Rápido
-            </div>
-          )}
+          <div className="absolute top-3 left-3 bg-blue-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-white text-xs font-semibold">
+            Envío Rápido
+          </div>
+
         </div>
 
         {/* Content */}
@@ -82,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
           {/* Shipping Info */}
           <p className="text-xs text-muted-foreground">
-            📦 Entrega en {product.shippingDays} {product.shippingDays === 1 ? 'día' : 'días'}
+            📦 Entrega en 1 día 2 días'
           </p>
         </div>
 

@@ -109,7 +109,7 @@ function ProductContent({ id }: { id: string }) {
             {/* Price */}
             <div className="glass p-6 rounded-2xl">
               <p className="text-5xl font-bold gradient-text mb-2">Bs. {product.price}</p>
-              {product.inStock ? (
+              {product.stock ? (
                 <p className="text-green-500 font-semibold">✓ En Stock</p>
               ) : (
                 <p className="text-red-500 font-semibold">✗ Agotado</p>
@@ -123,7 +123,7 @@ function ProductContent({ id }: { id: string }) {
                 <div>
                   <p className="font-semibold text-foreground">Envío Rápido</p>
                   <p className="text-sm text-muted-foreground">
-                    Entrega en {product.shippingDays} {product.shippingDays === 1 ? 'día' : 'días'} hábiles
+                    Entrega en 1-2 dias hábiles
                   </p>
                 </div>
               </div>
@@ -165,11 +165,11 @@ function ProductContent({ id }: { id: string }) {
 
               <button
                 onClick={handleAddToCart}
-                disabled={!product.inStock}
+                disabled={!product.stock}
                 className={`w-full glass-button text-lg font-semibold ${
                   addedToCart
                     ? 'bg-green-500 border-green-500 text-white'
-                    : product.inStock
+                    : product.stock
                     ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white border-none hover:shadow-lg'
                     : 'bg-gray-400 text-gray-600 cursor-not-allowed'
                 }`}
