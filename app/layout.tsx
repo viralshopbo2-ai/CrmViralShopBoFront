@@ -64,7 +64,7 @@ export default function RootLayout({
           />
         </noscript>
       </head>
-      <body className="font-sans antialiased bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-foreground">
+      <body className="font-sans antialiased text-white">
       {/* Parte del Código Base: Script principal con estrategia optimizada */}
       <Script id="fb-pixel" strategy="afterInteractive">
         {`

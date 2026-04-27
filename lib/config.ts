@@ -1,3 +1,6 @@
+// API Backend
+export const API_BASE_URL = process.env.API_BASE_URL || 'https://apiviralstore.viralshopbo.com';
+
 // WhatsApp Configuration
 // Actualiza el número de teléfono con tu número de WhatsApp
 // Formato: +1234567890 (incluir el código de país)

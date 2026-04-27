@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const API_BASE = 'https://apiviralstore.viralshopbo.com';
+import { API_BASE_URL as API_BASE } from '@/lib/config';
 
 // POST /api/products/[id]/video
 export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {

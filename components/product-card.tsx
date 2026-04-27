@@ -38,10 +38,11 @@ export function ProductCard({ product }: ProductCardProps) {
         onClick={handleNavigateToProduct}
         className="glass-card rounded-3xl overflow-hidden flex flex-col h-full hover:shadow-2xl transition-all duration-300 hover:border-white/30 cursor-pointer">
         {/* Image Container */}
-        <div className="relative h-48 sm:h-56 overflow-hidden bg-white/5">
+        <div className="relative aspect-square overflow-hidden bg-slate-800">
           <img
             src={product.image}
             alt={product.name}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           />
 

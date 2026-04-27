@@ -1,6 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-
-const API_BASE = 'https://apiviralstore.viralshopbo.com';
+import { API_BASE_URL as API_BASE } from '@/lib/config';
 
 function getAuthHeader(request: NextRequest): Record<string, string> {
     const token = request.headers.get('authorization');

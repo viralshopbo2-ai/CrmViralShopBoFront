@@ -4,11 +4,6 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  color: white;
-}
-
 /* Animated CTA Button - Super llamativo */
 @keyframes cta-scale-bounce {
   0%, 100% {
