@@ -20,6 +20,7 @@ interface OrderItem {
 
 interface PedidoData {
   nombre: string | null;
+  departamento: string | null;
   items: OrderItem[];
   subtotal: number;
   descuento: number;
@@ -82,24 +83,24 @@ export default function PedidoConfirmadoPage() {
     if (!pedido) return;
 
     const lineas: string[] = [];
-    lineas.push('Hola, quiero confirmar mi pedido:');
+    lineas.push('¡Hola Viral Shop Bo! 👋 Acabo de realizar un pedido en su página web y quiero confirmar mi envío para recibirlo lo antes posible. 🚀');
     lineas.push('');
-    if (pedido.nombre) {
-      lineas.push(`*Nombre:* ${pedido.nombre}`);
-      lineas.push('');
-    }
-    lineas.push('*Productos:*');
+    lineas.push(`Mi nombre es: ${pedido.nombre || 'No indicado'}`);
+    lineas.push('');
+    lineas.push('Mi pedido es:');
     pedido.items.forEach((item) => {
-      lineas.push(`- ${item.producto} x${item.cantidad} — Bs. ${(item.precio * item.cantidad).toFixed(2)}`);
+      lineas.push(`• ${item.cantidad} ${item.producto} — Bs. ${(item.precio * item.cantidad).toFixed(2)}`);
     });
-    lineas.push('');
     if (pedido.descuento > 0) {
+      lineas.push('');
       lineas.push(`Subtotal: Bs. ${pedido.subtotal.toFixed(2)}`);
-      lineas.push(`Descuento: -Bs. ${pedido.descuento.toFixed(2)}`);
+      lineas.push(`Descuento aplicado: -Bs. ${pedido.descuento.toFixed(2)}`);
     }
-    lineas.push(`*Total a pagar:* Bs. ${pedido.total.toFixed(2)}`);
+    lineas.push(`*Total a pagar: Bs. ${pedido.total.toFixed(2)}* (contra entrega)`);
     lineas.push('');
-    lineas.push('Pago contra entrega.');
+    lineas.push(`Ciudad: ${pedido.departamento || 'No indicada'}`);
+    lineas.push('');
+    lineas.push('Por favor, confírmenme si tienen disponibilidad para enviarlo mañana mismo. ¡Gracias!');
 
     const mensaje = encodeURIComponent(lineas.join('\n'));
     window.open(`https://wa.me/59167721941?text=${mensaje}`, '_blank');
@@ -183,7 +184,7 @@ export default function PedidoConfirmadoPage() {
           className="w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl flex items-center justify-center gap-2"
         >
           <MessageCircle className="w-5 h-5" />
-          Confirmar pedido por WhatsApp
+          Click aquí para confirmar por WhatsApp
         </Button>
       </div>
     </div>

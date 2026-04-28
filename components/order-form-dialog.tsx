@@ -118,6 +118,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
 
       sessionStorage.setItem('pedido_confirmado', JSON.stringify({
         nombre: formData.nombre || null,
+        departamento: formData.departamento || null,
         items: orderItems,
         subtotal: sub,
         descuento: totalDiscount,
