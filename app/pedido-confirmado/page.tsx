@@ -100,7 +100,7 @@ export default function PedidoConfirmadoPage() {
     lineas.push('');
     lineas.push(`Ciudad: ${pedido.departamento || 'No indicada'}`);
     lineas.push('');
-    lineas.push('Por favor, confírmenme si tienen disponibilidad para enviarlo mañana mismo. ¡Gracias!');
+    lineas.push('Por favor, confírmenme si tienen disponibilidad para enviarlo hoy mismo. ¡Gracias!');
 
     const mensaje = encodeURIComponent(lineas.join('\n'));
     window.open(`https://wa.me/59167721941?text=${mensaje}`, '_blank');
