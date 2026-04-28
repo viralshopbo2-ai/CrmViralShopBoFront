@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, ShoppingBag, MapPin, Package, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ interface PedidoData {
 export default function PedidoConfirmadoPage() {
   const router = useRouter();
   const [pedido, setPedido] = useState<PedidoData | null>(null);
+  const pixelFired = useRef(false);
 
   useEffect(() => {
     const raw = sessionStorage.getItem('pedido_confirmado');
@@ -41,32 +42,36 @@ export default function PedidoConfirmadoPage() {
       const data: PedidoData = JSON.parse(raw);
       setPedido(data);
 
-      // >>> INICIO RASTREO TIKTOK PIXEL <<<
-      if ((window as any).ttq) {
-        (window as any).ttq.track('Purchase', {
-          contents: data.pixelItems.map((item) => ({
-            content_id: item.content_id,
-            content_type: 'product',
-            content_name: item.content_name,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-          value: data.total,
-          currency: 'BOB',
-        });
-      }
-      // >>> FIN RASTREO TIKTOK PIXEL <<<
+      if (!pixelFired.current) {
+        pixelFired.current = true;
 
-      // >>> INICIO RASTREO FACEBOOK PIXEL <<<
-      if ((window as any).fbq) {
-        (window as any).fbq('track', 'Purchase', {
-          content_ids: data.pixelItems.map((i) => i.content_id),
-          content_type: 'product',
-          value: data.total,
-          currency: 'BOB',
-        });
+        // >>> INICIO RASTREO TIKTOK PIXEL <<<
+        if ((window as any).ttq) {
+          (window as any).ttq.track('Purchase', {
+            contents: data.pixelItems.map((item) => ({
+              content_id: item.content_id,
+              content_type: 'product',
+              content_name: item.content_name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            value: data.total,
+            currency: 'BOB',
+          });
+        }
+        // >>> FIN RASTREO TIKTOK PIXEL <<<
+
+        // >>> INICIO RASTREO FACEBOOK PIXEL <<<
+        if ((window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            content_ids: data.pixelItems.map((i) => i.content_id),
+            content_type: 'product',
+            value: data.total,
+            currency: 'BOB',
+          });
+        }
+        // >>> FIN RASTREO FACEBOOK PIXEL <<<
       }
-      // >>> FIN RASTREO FACEBOOK PIXEL <<<
 
     } catch {
       router.replace('/');
