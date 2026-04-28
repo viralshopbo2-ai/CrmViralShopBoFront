@@ -24,16 +24,31 @@ export function BuyNowButton({
     const { addToCart, items } = useCart();
 
     const handleBuyNow = () => {
-        // 2. DISPARAR EVENTO DE FACEBOOK PIXEL
         if (product) {
+            // Facebook Pixel
             fbq.event('InitiateCheckout', {
                 content_name: product.name,
                 content_ids: [product.id],
                 content_type: 'product',
                 value: product.price * quantity,
-                currency: 'BOB', // Moneda de Bolivia
-                num_items: quantity
+                currency: 'BOB',
+                num_items: quantity,
             });
+
+            // TikTok Pixel
+            if ((window as any).ttq) {
+                (window as any).ttq.track('InitiateCheckout', {
+                    contents: [{
+                        content_id: product.id.toString(),
+                        content_type: 'product',
+                        content_name: product.name,
+                        quantity: quantity,
+                        price: product.price,
+                    }],
+                    value: product.price * quantity,
+                    currency: 'BOB',
+                });
+            }
         }
 
         // Si hay un producto específico, agregarlo al carrito primero

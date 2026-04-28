@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, ShoppingBag, MapPin, Package } from 'lucide-react';
+import { CheckCircle, ShoppingBag, MapPin, Package, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface PixelItem {
@@ -38,41 +38,66 @@ export default function PedidoConfirmadoPage() {
       return;
     }
     try {
-      setPedido(JSON.parse(raw));
+      const data: PedidoData = JSON.parse(raw);
+      setPedido(data);
+
+      // >>> INICIO RASTREO TIKTOK PIXEL <<<
+      if ((window as any).ttq) {
+        (window as any).ttq.track('Purchase', {
+          contents: data.pixelItems.map((item) => ({
+            content_id: item.content_id,
+            content_type: 'product',
+            content_name: item.content_name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          value: data.total,
+          currency: 'BOB',
+        });
+      }
+      // >>> FIN RASTREO TIKTOK PIXEL <<<
+
+      // >>> INICIO RASTREO FACEBOOK PIXEL <<<
+      if ((window as any).fbq) {
+        (window as any).fbq('track', 'Purchase', {
+          content_ids: data.pixelItems.map((i) => i.content_id),
+          content_type: 'product',
+          value: data.total,
+          currency: 'BOB',
+        });
+      }
+      // >>> FIN RASTREO FACEBOOK PIXEL <<<
+
     } catch {
       router.replace('/');
     }
   }, [router]);
 
-  const handleOk = () => {
+  const handleWhatsApp = () => {
     if (!pedido) return;
 
-    // >>> INICIO RASTREO TIKTOK PIXEL <<<
-    if ((window as any).ttq) {
-      (window as any).ttq.track('CompletePayment', {
-        contents: pedido.pixelItems.map((item) => ({
-          content_id: item.content_id,
-          content_type: 'product',
-          content_name: item.content_name,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        value: pedido.total,
-        currency: 'BOB',
-      });
+    const lineas: string[] = [];
+    lineas.push('Hola, quiero confirmar mi pedido:');
+    lineas.push('');
+    if (pedido.nombre) {
+      lineas.push(`*Nombre:* ${pedido.nombre}`);
+      lineas.push('');
     }
-    // >>> FIN RASTREO TIKTOK PIXEL <<<
+    lineas.push('*Productos:*');
+    pedido.items.forEach((item) => {
+      lineas.push(`- ${item.producto} x${item.cantidad} — Bs. ${(item.precio * item.cantidad).toFixed(2)}`);
+    });
+    lineas.push('');
+    if (pedido.descuento > 0) {
+      lineas.push(`Subtotal: Bs. ${pedido.subtotal.toFixed(2)}`);
+      lineas.push(`Descuento: -Bs. ${pedido.descuento.toFixed(2)}`);
+    }
+    lineas.push(`*Total a pagar:* Bs. ${pedido.total.toFixed(2)}`);
+    lineas.push('');
+    lineas.push('Pago contra entrega.');
 
-    // >>> INICIO RASTREO FACEBOOK PIXEL <<<
-    if ((window as any).fbq) {
-      (window as any).fbq('track', 'Purchase', {
-        content_ids: pedido.pixelItems.map((i) => i.content_id),
-        content_type: 'product',
-        value: pedido.total,
-        currency: 'BOB',
-      });
-    }
-    // >>> FIN RASTREO FACEBOOK PIXEL <<<
+    const mensaje = encodeURIComponent(lineas.join('\n'));
+    window.open(`https://wa.me/59167721941?text=${mensaje}`, '_blank');
 
     sessionStorage.removeItem('pedido_confirmado');
     router.push('/');
@@ -147,12 +172,13 @@ export default function PedidoConfirmadoPage() {
           </p>
         </div>
 
-        {/* Botón OK */}
+        {/* Botón WhatsApp */}
         <Button
-          onClick={handleOk}
-          className="w-full bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl"
+          onClick={handleWhatsApp}
+          className="w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl flex items-center justify-center gap-2"
         >
-          Entendido, volver al inicio
+          <MessageCircle className="w-5 h-5" />
+          Confirmar pedido por WhatsApp
         </Button>
       </div>
     </div>

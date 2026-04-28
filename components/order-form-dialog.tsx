@@ -63,7 +63,8 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const sanitized = name === 'telefono' ? value.replace(/\D/g, '') : value;
+    setFormData((prev) => ({ ...prev, [name]: sanitized }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -74,6 +75,15 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
     e.preventDefault();
     if (!formData.telefono) { error('Por favor, ingresa tu número de teléfono'); return; }
     if (items.length === 0) { error('El carrito está vacío'); return; }
+
+    // >>> INICIO RASTREO PIXEL CLIENTE POTENCIAL <<<
+    if ((window as any).ttq) {
+      (window as any).ttq.track('SubmitForm');
+    }
+    if ((window as any).fbq) {
+      (window as any).fbq('track', 'Lead');
+    }
+    // >>> FIN RASTREO PIXEL CLIENTE POTENCIAL <<<
 
     setIsSubmitting(true);
     try {
@@ -146,8 +156,9 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
             Teléfono <span className="text-red-400">*</span>
           </Label>
           <Input
-            id="telefono" name="telefono" type="tel" value={formData.telefono}
-            onChange={handleInputChange} placeholder="Ej: 70000000" required
+            id="telefono" name="telefono" type="tel" inputMode="numeric"
+            value={formData.telefono} onChange={handleInputChange}
+            placeholder="Ej: 70000000" required
             className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 h-9 text-sm"
           />
         </div>

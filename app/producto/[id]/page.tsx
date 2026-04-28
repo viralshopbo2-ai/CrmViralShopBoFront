@@ -386,22 +386,6 @@ function ProductContent() {
             </div>
           </div>
 
-          {/* CTA Section */}
-          <div className="glass-dark rounded-3xl p-6 lg:p-12 text-center space-y-3 lg:space-y-6 mb-10 lg:mb-12">
-            <h2 className="text-xl lg:text-4xl font-bold text-white">¿Listo para tu compra?</h2>
-            <p className="text-white/70 text-sm lg:text-lg max-w-2xl mx-auto">
-              Completa tu pedido con envío gratis y pago contraentrega. Sin riesgos, pagas cuando lo recibas.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center max-w-lg mx-auto">
-              <div className="flex-1">
-                <BuyNowButton product={product} quantity={quantity} />
-              </div>
-              <Link href="/" className="glass-button text-white hover:shadow-lg py-3 lg:py-4 px-6 lg:px-8 text-sm lg:text-lg font-semibold transition-all">
-                Ver más productos
-              </Link>
-            </div>
-          </div>
-
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div className="space-y-4 lg:space-y-8">
